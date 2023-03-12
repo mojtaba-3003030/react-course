@@ -1,0 +1,25 @@
+.newComment{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background: #e0e7ff ;
+    width: 600px;
+    height: 200px;
+    color: #4338ca;
+    border-radius: 5px; 
+}
+.btn{
+    outline: none;
+    padding: 5px 10px ;
+    background-color: #ede9fe;
+    color:#6d28d9 ;
+    border-radius: 5px;
+    border: 1px solid #6d28d9;
+  }
+  .primary{
+    color: #fff;
+    background-color: #6d28d9;
+    border: none;
+    padding: 8px 10px ;
+  }
