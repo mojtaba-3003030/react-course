@@ -34,8 +34,8 @@ const FullComment = ({ commentId, setComments }) => {
     }
   }, [commentId]);
 
-  let commentDetail ;
-  if( true || !comment){ commentDetail=<p style={styles}>please select a comment</p>}
+  let commentDetail=<p style={styles}>please select a comment</p>;
+  
 
   if (commentId) commentDetail = <p>Loading ...</p>;
   if (comment)
