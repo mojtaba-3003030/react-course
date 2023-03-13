@@ -4,10 +4,12 @@ import FullComment from "../../component/Fullcomments/FullComment";
 import NewComment from "../../component/NewComment/NewComment";
 import "./Discussion.css";
 import axios from "axios";
+import {toast } from 'react-toastify';
 
 const Discussion = () => {
   const [comments, setComments] = useState(null);
   const [commentId, setCommentId] = useState(null);
+  const [error, setError] = useState(false);
   // 2XX ==> ok
   // 3xx =>  301 ,302  redirect    => SEO
   // 4xx ==> 401=> unAuthorized  --> کاربر ناشناس هست
@@ -22,47 +24,49 @@ const Discussion = () => {
         // console.log(data.slice(0, 4));
         setComments(data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        setError(true)
       }
     }
     getComments();
   }, []);
 
-  const postCommentHandler = (comment) => {
-    axios
-      .post("http://localhost:3004/comments", { ...comment, postId: 10 })
-      .then(() => axios.get("http://localhost:3004/comments"))
-      .then((res) => setComments(res.data))
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+ 
   const selectCommentHandler = (id) => {
     setCommentId(id);
   };
 
+  const renderComments=()=>{
+    let renderedValue=<p>Loading ... </p>
+    if (error) {
+      renderedValue=<p>Fetching data failed ! </p>
+      toast.error("there is an error !")
+  }
+    if (comments && !error){ 
+      renderedValue =comments.map((c) => (
+        <Comment
+          key={c.id}
+          name={c.name}
+          email={c.email}
+          body={c.body}
+          onclick={() => selectCommentHandler(c.id)}
+        />
+      ))
+    }
+  
+    return renderedValue
+  }
+
   return (
     <main>
       <section>
-        {comments ? (
-          comments.map((c) => (
-            <Comment
-              key={c.id}
-              name={c.name}
-              email={c.email}
-              body={c.body}
-              onclick={() => selectCommentHandler(c.id)}
-            />
-          ))
-        ) : (
-          <p> Loading ...</p>
-        )}
+        {renderComments()}
       </section>
       <section>
-        <FullComment commentId={commentId} />
+        <FullComment commentId={commentId} setComments={setComments} />
       </section>
       <section>
-        <NewComment onAddPost={postCommentHandler} />
+        <NewComment setComments={setComments} />
       </section>
     </main>
   );
