@@ -3,8 +3,8 @@ import Comment from "../../component/Comment/Comment";
 import FullComment from "../../component/Fullcomments/FullComment";
 import NewComment from "../../component/NewComment/NewComment";
 import "./Discussion.css";
-import axios from "axios";
 import {toast } from 'react-toastify';
+import { getAllComments } from "../../component/services/getAllCommentsService";
 
 const Discussion = () => {
   const [comments, setComments] = useState(null);
@@ -20,7 +20,7 @@ const Discussion = () => {
   useEffect(() => {
     async function getComments() {
       try {
-        const { data } = await axios.get("http://localhost:3004/comments");
+        const { data } = await getAllComments();
         // console.log(data.slice(0, 4));
         setComments(data);
       } catch (error) {
@@ -63,7 +63,7 @@ const Discussion = () => {
         {renderComments()}
       </section>
       <section>
-        <FullComment commentId={commentId} setComments={setComments} />
+        <FullComment commentId={commentId} setComments={setComments} setCommentId={setCommentId} />
       </section>
       <section>
         <NewComment setComments={setComments} />

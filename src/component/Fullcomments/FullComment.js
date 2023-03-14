@@ -1,8 +1,10 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import "./FullComment.css";
+import { getAllComments } from "../services/getAllCommentsService";
+import { deleteComment } from "../../container/deleteCommentService";
+import { getOneComment } from "../services/getOneCommentsService";
 
-const FullComment = ({ commentId, setComments }) => {
+const FullComment = ({ commentId, setComments,setCommentId }) => {
   const [comment, setComment] = useState(null);
 
   const styles = {
@@ -10,21 +12,20 @@ const FullComment = ({ commentId, setComments }) => {
     backgroundColor: !commentId ? "#efefef" : "red",
     padding: "10px",
   };
-  const deleteHandler = (e) => {
-    axios
-      .delete(`http://localhost:3004/comments/${commentId}`)
-      .then((res) => axios.get("http://localhost:3004/comments"))
-      .then((res) => {
-        setComments(res.data);
-        setComment(false);
+  const deleteHandler = async (e) => {
+     await deleteComment(commentId)
+       const {data} =await getAllComments()
+      
+        setComments(data);
+        setCommentId(null);
+        setComment(null);
         commentDetail = <p style={styles}>please select a comment</p>;
-      });
+      
   };
 
   useEffect(() => {
     if (commentId) {
-      axios
-        .get(`http://localhost:3004/comments/${commentId}`)
+      getOneComment(commentId)
         .then((res) => {
           setComment(res.data);
         })
@@ -34,8 +35,8 @@ const FullComment = ({ commentId, setComments }) => {
     }
   }, [commentId]);
 
-  let commentDetail=<p style={styles}>please select a comment</p>;
-  
+  let commentDetail ;
+  if(!comment  || true){ commentDetail=<p style={styles}>please select a comment</p>}
 
   if (commentId) commentDetail = <p>Loading ...</p>;
   if (comment)
